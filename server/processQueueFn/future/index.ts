@@ -48,7 +48,7 @@ function computeSentiment(msg: QueueMessage["message"]): SentimentResult {
   };
 }
 
-export async function processQueue() {
+export async function processFutureQueue() {
   // 1. read batch from queue
   const { data: messages, error } = await supabase.rpc("pgmq_read", {
     queue_name: QUEUE_NAME,
