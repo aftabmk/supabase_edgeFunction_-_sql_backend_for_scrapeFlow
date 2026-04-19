@@ -1,6 +1,6 @@
 import { supabase } from "../supabaseClient.ts";
 
-import { QueueMessage, PrevRow, FutureRow } from "./types.ts";
+import { QueueMessage, PrevRow, FutureRow } from "./type.ts";
 import { QUEUE_NAME,MULTIPLIER } from "./constant.ts";
 
 async function resolvePrevRow(ul: string): Promise<PrevRow | null> {
