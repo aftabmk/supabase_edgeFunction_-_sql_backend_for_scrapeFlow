@@ -1,32 +1,12 @@
-import { processOptionQueue  } from "../option/index.ts";
-import { processFutureQueue  } from "../future/index.ts";
-import { processEquityQueue  } from "../equity/index.ts";
-
-// queue names must match what was used in pgmq.create()
-const QUEUE_MAP = {
-  option_sentiment_queue: processOptionQueue,
-  future_sentiment_queue: processFutureQueue,
-  equity_sentiment_queue: processEquityQueue,
-} as const;
-
-type QueueName = keyof typeof QUEUE_MAP;
-
-type WebhookPayload = {
-  table?:  string;
-  schema?: string;
-  type?:   string;
-  record?: {
-    queue_name?: string;
-    [key: string]: unknown;
-  };
-  [key: string]: unknown;
-};
+import { QUEUE_MAP } from "./constant.ts";
+import { QueueName, WebhookPayload } from "./type.ts";
 
 function resolveQueueName(payload: WebhookPayload): QueueName {
   // Supabase DB webhook sends { table, record, ... }
   // option_table → option_sentiment_queue
   // future_table → future_sentiment_queue
   // equity_table → equity_sentiment_queue
+  
   const table = payload?.table ?? "";
 
   if (table.startsWith("option"))  return "option_sentiment_queue";

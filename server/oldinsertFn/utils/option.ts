@@ -1,4 +1,4 @@
-import { supabase } from "../../processQueueFn/supabaseClient.ts";
+import { supabase } from "../supabaseClient.ts";
 
 type OptionRow = {
   exchange: string;

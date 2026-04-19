@@ -1,6 +1,6 @@
-import { handleOption } from "../option/index.ts";
-import { handleFuture } from "../future/index.ts";
-import { handleEquity } from "../equity/index.ts";
+import { handleOption } from "../utils/option.ts";
+import { handleFuture } from "../utils/future.ts";
+import { handleEquity } from "../utils/equity.ts";
 import { BrokerType } from "./type.ts";
 
 type TypedObject = {

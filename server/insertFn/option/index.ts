@@ -1,4 +1,4 @@
-import { supabase } from "../supabaseClient.ts";
+import { supabase } from "../../processQueueFn/supabaseClient.ts";
 import { CePe, OptionRow,QueueMessage,PrevRow } from "./type.ts";
 import { MULTIPLIER, QUEUE_NAME } from "./constant.ts";
 
