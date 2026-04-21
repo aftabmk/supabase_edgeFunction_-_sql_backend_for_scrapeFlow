@@ -1,42 +1,51 @@
 import { handleOption } from "../option/index.ts";
 import { handleFuture } from "../future/index.ts";
 import { handleEquity } from "../equity/index.ts";
-import { BrokerType } from "./type.ts";
 
-type TypedObject = {
-  type: BrokerType;
-  [key: string]: unknown;
-};
+import { Payload, BrokerType, EquityRow, FutureRow, OptionRow } from "./type.ts";
 
-type Payload = TypedObject | TypedObject[];
+// --- function overloads for perfect typing ---
+export async function broker(payload: OptionRow[]): Promise<{ type: BrokerType; result: unknown }>;
+export async function broker(payload: EquityRow | FutureRow): Promise<{ type: BrokerType; result: unknown }>;
 
+// --- implementation ---
 export async function broker(payload: Payload) {
-  let type: BrokerType;
-  let result: unknown;
-
+  // ✅ Case 1: Option array
   if (Array.isArray(payload)) {
-    if (payload.length === 0) throw new Error("Empty payload");
-    type = payload[0].type;
-  } else {
-    type = payload.type;
+    if (payload.length === 0) {
+      throw new Error("Empty payload");
+    }
+
+    // ensure all are OPTION
+    if (!payload.every(p => p.type === BrokerType.OPTION)) {
+      throw new Error("Invalid payload: array must contain only OPTION rows");
+    }
+
+    const result = await handleOption(payload);
+
+    return {
+      type: BrokerType.OPTION,
+      result,
+    };
   }
 
-  switch (type) {
+  // ✅ Case 2: Single object
+  switch (payload.type) {
+    case BrokerType.EQUITY: {
+      const result = await handleEquity(payload as EquityRow);
+      return { type: BrokerType.EQUITY, result };
+    }
+
+    case BrokerType.FUTURE: {
+      const result = await handleFuture(payload as FutureRow);
+      return { type: BrokerType.FUTURE, result };
+    }
+
     case BrokerType.OPTION:
-      result = await handleOption(payload);
-      break;
-
-    case BrokerType.EQUITY:
-      result = await handleEquity(payload);
-      break;
-
-    case BrokerType.FUTURE:
-      result = await handleFuture(payload);
-      break;
+      // safeguard: OPTION must be array
+      throw new Error("OPTION payload must be an array");
 
     default:
-      throw new Error(`Unsupported type: ${type}`);
+      throw new Error(`Unsupported type: ${payload.type}`);
   }
-
-  return { type, result };
 }
