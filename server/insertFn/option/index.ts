@@ -152,7 +152,7 @@ async function processOptionRow(
     queue_name: QUEUE_NAME,
     message: {
       ul, ts, str, exp, key,
-      multiplier: MULTIPLIER,
+      multiplier: ul[0] == 'N' ? MULTIPLIER.EXCHANGE_1 : MULTIPLIER.EXCHANGE_2,
       ulv,
       // current
       ce_oi,

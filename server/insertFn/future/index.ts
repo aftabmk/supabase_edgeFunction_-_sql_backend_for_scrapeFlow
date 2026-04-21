@@ -65,7 +65,7 @@ async function processFutureRow(row: FutureRow) {
     message: {
       ul,
       ts,
-      multiplier: MULTIPLIER,
+      multiplier: ul[0] == 'N' ? MULTIPLIER.EXCHANGE_1 : MULTIPLIER.EXCHANGE_2,,
       // current
       oi:       resolvedOi,
       ltp,

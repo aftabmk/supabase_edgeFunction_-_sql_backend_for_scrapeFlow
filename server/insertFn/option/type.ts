@@ -67,4 +67,9 @@ type PrevRow = {
   prev_ts:     string;
 };
 
-export { CePe, OptionRow, QueueMessage, PrevRow };
+type Exchange = {
+    EXCHANGE_1 : number;
+    EXCHANGE_2 : number
+};
+
+export { CePe, OptionRow, QueueMessage, PrevRow, Exchange };

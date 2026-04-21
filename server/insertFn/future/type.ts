@@ -36,5 +36,9 @@ type PrevRow = {
   prev_ts: string;
 };
 
+type Exchange = {
+    EXCHANGE_1 : number;
+    EXCHANGE_2 : number
+};
 
-export { FutureRow, QueueMessage, PrevRow }
+export { FutureRow, QueueMessage, PrevRow, Exchange}

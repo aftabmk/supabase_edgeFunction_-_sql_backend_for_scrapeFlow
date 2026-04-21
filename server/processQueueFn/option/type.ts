@@ -37,7 +37,9 @@ type SentimentResult = {
   ce_val:    number | null;
   ce_ltpc:   number;
   ce_oi:     number;
+  ce_iv:     number;
   ulv:       number;
+  pe_iv:     number;
   pe_oi:     number;
   pe_ltpc:   number;
   pe_val:    number | null;
