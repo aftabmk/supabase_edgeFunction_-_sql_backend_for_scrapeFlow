@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS equity_sentiment_table (
   ul      TEXT        NOT NULL,
   ltp     NUMERIC,
   vol     NUMERIC,
-  value   NUMERIC,
+  val     NUMERIC,
   prev_ts TIMESTAMPTZ,
   PRIMARY KEY (ts, ul)
 ) PARTITION BY RANGE (ts);
