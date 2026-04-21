@@ -1,7 +1,7 @@
 import { supabase } from "../supabaseClient.ts";
 
 import { QueueMessage, SentimentResult } from "./type.ts";
-import { QUEUE_NAME, VISIBILITY_TIMEOUT, BATCH_SIZE } from "./constant.ts";
+import { QUEUE_NAME, VISIBILITY_TIMEOUT, BATCH_SIZE , EQUITY_SENTIMENT_TABLE} from "./constant.ts";
 
 
 function computeEquitySentiment(msg: QueueMessage["message"]): SentimentResult {
@@ -56,7 +56,7 @@ export async function processEquityQueue() {
 
       // 3. upsert result
       const { error: upsertError } = await supabase
-        .from("equity_sentiment_table")
+        .from(EQUITY_SENTIMENT_TABLE)
         .upsert(
           {
             ts,

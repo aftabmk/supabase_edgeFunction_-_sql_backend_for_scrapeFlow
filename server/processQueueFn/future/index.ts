@@ -1,7 +1,7 @@
 import { supabase } from "../supabaseClient.ts";
 
 import { QueueMessage, SentimentResult } from "./type.ts";
-import { QUEUE_NAME, BATCH_SIZE, VISIBILITY_TIMEOUT } from "./constant.ts";
+import { QUEUE_NAME, BATCH_SIZE, VISIBILITY_TIMEOUT, FUTURE_SENTIMENT_TABLE } from "./constant.ts";
 
 function computeSentiment(msg: QueueMessage["message"]): SentimentResult {
   const {
@@ -81,7 +81,7 @@ export async function processFutureQueue() {
 
       // 3. upsert result into sentiment table
       const { error: upsertError } = await supabase
-        .from("future_sentiment_table")
+        .from(FUTURE_SENTIMENT_TABLE)
         .upsert(
           {
             ts,

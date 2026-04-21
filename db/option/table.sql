@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS option_sentiment_table_bse
 -- ─────────────────────────────────────────────
 -- option_sentiment_payload  (CE + PE combined)
 -- ─────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS option_sentiment_payload (
+CREATE TABLE IF NOT EXISTS option_sentiment_payload_table (
   ts        TIMESTAMPTZ NOT NULL,
   ul        TEXT        NOT NULL,
   exp       DATE        NOT NULL,

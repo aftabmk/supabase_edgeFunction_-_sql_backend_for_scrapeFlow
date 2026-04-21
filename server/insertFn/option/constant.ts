@@ -1,7 +1,8 @@
 import { Exchange } from "./type";
 
-const EXCHANGE_PREFIX = 'N';
-const QUEUE_NAME = "option_sentiment_queue";
+const { QUEUE_NAME_OPTION, EXCHANGE, OPTION_TABLE,OPTION_PAYLOAD_TABLE } = Deno.env.toObject();
+
+const QUEUE_NAME = QUEUE_NAME_OPTION;
 const MULTIPLIER : Exchange  = { EXCHANGE_1 : 65, EXCHANGE_2 : 20};
 
-export { MULTIPLIER, QUEUE_NAME , EXCHANGE_PREFIX};
+export { MULTIPLIER, QUEUE_NAME , EXCHANGE, OPTION_PAYLOAD_TABLE, OPTION_TABLE };

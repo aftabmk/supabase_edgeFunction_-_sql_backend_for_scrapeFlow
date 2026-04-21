@@ -1,7 +1,7 @@
 import { supabase } from "../supabaseClient.ts";
 
 import { QueueMessage, SentimentResult } from "./type.ts";
-import { QUEUE_NAME, VISIBILITY_TIMEOUT, BATCH_SIZE } from "./constant.ts";
+import { QUEUE_NAME, VISIBILITY_TIMEOUT, BATCH_SIZE , OPTION_SENTIMENT_TABLE, OPTION_SENTIMENT_PAYLOAD_TABLE} from "./constant.ts";
 
 function resolveIv(
   current:  number,
@@ -108,7 +108,7 @@ export async function processOptionQueue() {
 
       // 1. upsert option_sentiment_table (ts, ul, exp, str, ulv, prev_ts)
       const { error: mainError } = await supabase
-        .from("option_sentiment_table")
+        .from(OPTION_SENTIMENT_TABLE)
         .upsert(
           { ts, ul, str, exp, ulv, prev_ts },
           { onConflict: ["ul", "ts", "str", "exp"] }
@@ -121,7 +121,7 @@ export async function processOptionQueue() {
       // 2. upsert option_sentiment_payload (ce + pe columns)
       //    FK references option_sentiment_table so must insert after
       const { error: payloadError } = await supabase
-        .from("option_sentiment_payload")
+        .from(OPTION_SENTIMENT_PAYLOAD_TABLE)
         .upsert(
           {
             ts, ul, str, exp,

@@ -1,3 +1,5 @@
-const QUEUE_NAME = "equity_sentiment_queue";
+const { QUEUE_NAME_EQUITY, EQUITY_TABLE } = Deno.env.toObject();
 
-export { QUEUE_NAME };
+const QUEUE_NAME = QUEUE_NAME_EQUITY;
+
+export { QUEUE_NAME , EQUITY_TABLE};

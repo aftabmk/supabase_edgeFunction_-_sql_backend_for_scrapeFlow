@@ -1,7 +1,7 @@
 import { supabase } from "../supabaseClient.ts";
 
 import { QUEUE_NAME } from "./constant.ts";
-import { EquityRow, QueueMessage, PrevRow } from "./type.ts";
+import { EquityRow, QueueMessage, PrevRow, EQUITY_TABLE  } from "./type.ts";
 /**
  * Get prev row in priority order:
  *  1. single pending queue message for this ul
@@ -32,7 +32,7 @@ async function resolvePrevRow(ul: string, currentTs: string): Promise<PrevRow | 
 
   // --- 2. fallback: equity_table ---
   const { data, error } = await supabase
-    .from("equity_table")
+    .from(EQUITY_TABLE)
     .select("ts, ltp, vol")
     .eq("ul", ul)
     .lt("ts", currentTs)
@@ -83,7 +83,7 @@ async function processEquityRow(row: EquityRow) {
 
   // 3. upsert into equity_table — webhook fires here, queue already ready
   const { error: insertError } = await supabase
-    .from("equity_table")
+    .from(EQUITY_TABLE)
     .upsert(
       { key, ltp, pc, ts, ul, vol },
       { onConflict: ["ts", "key"] }
@@ -98,7 +98,7 @@ async function processEquityRow(row: EquityRow) {
     throw new Error(`Insert failed (${key}): ${insertError.message}`);
   }
 
-  return { table: "equity_table", key };
+  return { table: EQUITY_TABLE, key };
 }
 
 export async function handleEquity(payload: EquityRow) {

@@ -1,7 +1,7 @@
 import { supabase } from "../supabaseClient.ts";
 
 import { QueueMessage, PrevRow, FutureRow } from "./type.ts";
-import { QUEUE_NAME,MULTIPLIER, EXCHANGE_PREFIX } from "./constant.ts";
+import { QUEUE_NAME,MULTIPLIER, EXCHANGE, FUTURE_TABLE } from "./constant.ts";
 
 async function resolvePrevRow(ul: string): Promise<PrevRow | null> {
 
@@ -29,7 +29,7 @@ async function resolvePrevRow(ul: string): Promise<PrevRow | null> {
 
   // --- 2. fallback: future_table ---
   const { data, error } = await supabase
-    .from("future_table")
+    .from(FUTURE_TABLE)
     .select("ts, ltp, oi, vol")
     .eq("ul", ul)
     .neq("oi", 0)
@@ -58,7 +58,7 @@ async function processFutureRow(row: FutureRow) {
 
   // 2. resolve oi — use prev if incoming is 0
   const resolvedOi = oi !== 0 ? oi : (prev?.prev_oi ?? 0);
-  const multiplier = ul[0] == EXCHANGE_PREFIX ? MULTIPLIER.EXCHANGE_1 : MULTIPLIER.EXCHANGE_2;
+  const multiplier = ul == EXCHANGE ? MULTIPLIER.EXCHANGE_1 : MULTIPLIER.EXCHANGE_2;
 
   // 3. enqueue FIRST — must be present before webhook fires on table insert
   const { data: msgId, error: queueError } = await supabase.rpc("pgmq_send", {
@@ -86,7 +86,7 @@ async function processFutureRow(row: FutureRow) {
 
   // 4. upsert into future_table — webhook fires here, queue already ready
   const { error: insertError } = await supabase
-    .from("future_table")
+    .from(FUTURE_TABLE)
     .upsert(
       { ts, key, exp, vol, ltp, oi: resolvedOi, tto, ul, ulv },
       { onConflict: ["ts", "key"] }
@@ -101,7 +101,7 @@ async function processFutureRow(row: FutureRow) {
     throw new Error(`Insert failed (${key}): ${insertError.message}`);
   }
 
-  return { table: "future_table", key, resolvedOi };
+  return { table: FUTURE_TABLE, key, resolvedOi };
 }
 
 

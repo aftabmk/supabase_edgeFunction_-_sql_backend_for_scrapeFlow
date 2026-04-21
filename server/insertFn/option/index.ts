@@ -1,7 +1,7 @@
 import { supabase } from "../supabaseClient.ts";
 
 import { CePe, OptionRow,QueueMessage,PrevRow } from "./type.ts";
-import { MULTIPLIER, QUEUE_NAME, EXCHANGE_PREFIX } from "./constant.ts";
+import { MULTIPLIER, QUEUE_NAME, EXCHANGE, OPTION_TABLE, OPTION_PAYLOAD_TABLE } from "./constant.ts";
 
 /**
  * Resolve prev row for a specific strike in priority order:
@@ -47,11 +47,11 @@ async function resolvePrevRow(
 
   // --- 2. fallback: tables ---
   const { data, error } = await supabase
-    .from("option_table")
+    .from(OPTION_TABLE)
     .select(`
       ts,
       ulv,
-      option_payload_table (
+      ${OPTION_PAYLOAD_TABLE} (
         ce_oi, ce_vol, ce_iv, ce_ltp,
         pe_oi, pe_vol, pe_iv, pe_ltp
       )
@@ -60,7 +60,7 @@ async function resolvePrevRow(
     .eq("str", str)
     .eq("exp", exp)
     .lt("ts",  currentTs)
-    .neq("option_payload_table.ce_oi", 0)
+    .neq(`${OPTION_PAYLOAD_TABLE}.ce_oi`, 0)
     .order("ts", { ascending: false })
     .limit(1)
     .single();
@@ -111,9 +111,9 @@ async function resolvePrevDayIv(
 ): Promise<{ prev_day_ce_iv: number; prev_day_pe_iv: number }> {
 
   const { data, error } = await supabase
-    .from("option_table")
+    .from(OPTION_TABLE)
     .select(`
-      option_payload_table (
+      ${OPTION_PAYLOAD_TABLE} (
         ce_iv,
         pe_iv
       )
@@ -165,7 +165,7 @@ async function processOptionRow(
     queue_name: QUEUE_NAME,
     message: {
       ul, ts, str, exp, key,
-      multiplier: ul[0] == EXCHANGE_PREFIX ? MULTIPLIER.EXCHANGE_1 : MULTIPLIER.EXCHANGE_2,
+      multiplier: ul == EXCHANGE ? MULTIPLIER.EXCHANGE_1 : MULTIPLIER.EXCHANGE_2,
       ulv,
       // current
       ce_oi,
@@ -227,7 +227,7 @@ export async function handleOption(payload: OptionRow[]) {
 
   // 2. bulk upsert option_table
   const { error: mainError } = await supabase
-    .from("option_table")
+    .from(OPTION_TABLE)
     .upsert(
       rows.map((r) => r.mainRow),
       { onConflict: ["ts", "key", "ul"] }
@@ -245,7 +245,7 @@ export async function handleOption(payload: OptionRow[]) {
 
   // 3. bulk upsert option_payload_table
   const { error: payloadError } = await supabase
-    .from("option_payload_table")
+    .from(OPTION_PAYLOAD_TABLE)
     .upsert(
       rows.map((r) => r.payloadRow),
       { onConflict: ["ts", "key", "ul"] }
@@ -261,5 +261,5 @@ export async function handleOption(payload: OptionRow[]) {
     throw new Error(`Bulk insert failed in option_payload_table: ${payloadError.message}`);
   }
 
-  return rows.map((r) => ({ table: "option_table", key: r.mainRow.key }));
+  return rows.map((r) => ({ table: OPTION_TABLE, key: r.mainRow.key }));
 }
