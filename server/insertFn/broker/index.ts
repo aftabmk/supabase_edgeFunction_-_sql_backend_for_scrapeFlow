@@ -2,11 +2,11 @@ import { handleOption } from "../option/index.ts";
 import { handleFuture } from "../future/index.ts";
 import { handleEquity } from "../equity/index.ts";
 
-import { Payload, BrokerType, EquityRow, FutureRow, OptionRow } from "./type.ts";
+import { Payload, BrokerType, EquityRow, FutureRow, OptionRow, Result } from "./type.ts";
 
 // --- function overloads for perfect typing ---
-export async function broker(payload: OptionRow[]): Promise<{ type: BrokerType; result: unknown }>;
-export async function broker(payload: EquityRow | FutureRow): Promise<{ type: BrokerType; result: unknown }>;
+export async function broker(payload: OptionRow[]): Promise<{ type: BrokerType; result: Result }>;
+export async function broker(payload: EquityRow | FutureRow): Promise<{ type: BrokerType; result: Result }>;
 
 // --- implementation ---
 export async function broker(payload: Payload) {
@@ -25,7 +25,7 @@ export async function broker(payload: Payload) {
 
     return {
       type: BrokerType.OPTION,
-      result,
+      result
     };
   }
 
@@ -41,8 +41,8 @@ export async function broker(payload: Payload) {
       return { type: BrokerType.FUTURE, result };
     }
 
+    // safeguard: OPTION must be array
     case BrokerType.OPTION:
-      // safeguard: OPTION must be array
       throw new Error("OPTION payload must be an array");
 
     default:

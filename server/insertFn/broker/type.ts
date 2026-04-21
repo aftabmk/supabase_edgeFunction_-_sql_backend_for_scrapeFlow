@@ -13,4 +13,9 @@ type Payload =
   | FutureRow
   | OptionRow[];
 
-export { BrokerType, Payload, EquityRow, OptionRow, FutureRow };
+type Result = {
+  table : string,
+  key : string
+};
+
+export { BrokerType, Payload, EquityRow, OptionRow, FutureRow, Result };
