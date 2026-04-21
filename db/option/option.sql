@@ -34,7 +34,7 @@ LANGUAGE sql AS $$
         p.pe_coivol,
         p.pe_bias
     FROM option_sentiment_table s
-    JOIN option_sentiment_payload p
+    JOIN option_sentiment_payload_table p
       USING (ul, ts, str, exp)
     WHERE s.ul  = exchange
       AND s.str = strikePrice
