@@ -1,7 +1,7 @@
 import { supabase } from "../supabaseClient.ts";
 
 import { CePe, OptionRow,QueueMessage,PrevRow } from "./type.ts";
-import { MULTIPLIER, QUEUE_NAME } from "./constant.ts";
+import { MULTIPLIER, QUEUE_NAME, EXCHANGE_PREFIX } from "./constant.ts";
 
 /**
  * Resolve prev row for a specific strike in priority order:
@@ -165,7 +165,7 @@ async function processOptionRow(
     queue_name: QUEUE_NAME,
     message: {
       ul, ts, str, exp, key,
-      multiplier: ul[0] == 'N' ? MULTIPLIER.EXCHANGE_1 : MULTIPLIER.EXCHANGE_2,
+      multiplier: ul[0] == EXCHANGE_PREFIX ? MULTIPLIER.EXCHANGE_1 : MULTIPLIER.EXCHANGE_2,
       ulv,
       // current
       ce_oi,

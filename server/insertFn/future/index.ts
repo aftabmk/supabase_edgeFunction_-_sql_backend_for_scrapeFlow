@@ -1,7 +1,7 @@
 import { supabase } from "../supabaseClient.ts";
 
 import { QueueMessage, PrevRow, FutureRow } from "./type.ts";
-import { QUEUE_NAME,MULTIPLIER } from "./constant.ts";
+import { QUEUE_NAME,MULTIPLIER, EXCHANGE_PREFIX } from "./constant.ts";
 
 async function resolvePrevRow(ul: string): Promise<PrevRow | null> {
 
@@ -58,6 +58,7 @@ async function processFutureRow(row: FutureRow) {
 
   // 2. resolve oi — use prev if incoming is 0
   const resolvedOi = oi !== 0 ? oi : (prev?.prev_oi ?? 0);
+  const multiplier = ul[0] == EXCHANGE_PREFIX ? MULTIPLIER.EXCHANGE_1 : MULTIPLIER.EXCHANGE_2;
 
   // 3. enqueue FIRST — must be present before webhook fires on table insert
   const { data: msgId, error: queueError } = await supabase.rpc("pgmq_send", {
@@ -65,9 +66,9 @@ async function processFutureRow(row: FutureRow) {
     message: {
       ul,
       ts,
-      multiplier: ul[0] == 'N' ? MULTIPLIER.EXCHANGE_1 : MULTIPLIER.EXCHANGE_2,,
+      multiplier,
       // current
-      oi:       resolvedOi,
+      oi:resolvedOi,
       ltp,
       vol,
       ulv,
