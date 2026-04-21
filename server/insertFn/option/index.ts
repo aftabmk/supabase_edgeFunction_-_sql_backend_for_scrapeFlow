@@ -65,20 +65,33 @@ async function resolvePrevRow(
     .limit(1)
     .single();
 
-  if (!error && data && data.option_payload_table) {
-    const p = data.option_payload_table as unknown as CePe & {
-      pe_oi: number; pe_vol: number; pe_iv: number; pe_ltp: number;
+  if (!error && data?.option_payload_table) {
+    const raw = data.option_payload_table;
+
+    const ce: CePe = {
+      oi:  raw.ce_oi,
+      vol: raw.ce_vol,
+      iv:  raw.ce_iv,
+      ltp: raw.ce_ltp,
     };
+
+    const pe: CePe = {
+      oi:  raw.pe_oi,
+      vol: raw.pe_vol,
+      iv:  raw.pe_iv,
+      ltp: raw.pe_ltp,
+    };
+
     return {
       prev_ulv:    data.ulv,
-      prev_ce_oi:  p.ce_oi,
-      prev_ce_vol: p.ce_vol,
-      prev_ce_iv:  p.ce_iv,
-      prev_ce_ltp: p.ce_ltp,
-      prev_pe_oi:  p.pe_oi,
-      prev_pe_vol: p.pe_vol,
-      prev_pe_iv:  p.pe_iv,
-      prev_pe_ltp: p.pe_ltp,
+      prev_ce_oi:  ce.oi,
+      prev_ce_vol: ce.vol,
+      prev_ce_iv:  ce.iv,
+      prev_ce_ltp: ce.ltp,
+      prev_pe_oi:  pe.oi,
+      prev_pe_vol: pe.vol,
+      prev_pe_iv:  pe.iv,
+      prev_pe_ltp: pe.ltp,
       prev_ts:     data.ts,
     };
   }
