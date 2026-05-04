@@ -1,4 +1,4 @@
-type QueueMessage = {
+export type QueueMessage = {
   msg_id: number;
   message: {
     ul:             string;
@@ -31,7 +31,7 @@ type QueueMessage = {
   };
 };
 
-type SentimentResult = {
+export type SentimentResult = {
   ce_bias:   string | null;
   ce_coivol: number | null;
   ce_val:    number | null;
@@ -47,4 +47,5 @@ type SentimentResult = {
   pe_bias:   string | null;
 };
 
-export { QueueMessage, SentimentResult };
+export const __keep = true;
+// export type { QueueMessage, SentimentResult };

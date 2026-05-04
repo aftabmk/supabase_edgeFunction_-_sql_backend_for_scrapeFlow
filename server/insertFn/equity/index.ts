@@ -1,7 +1,7 @@
 import { supabase } from "../supabaseClient.ts";
 
-import { QUEUE_NAME } from "./constant.ts";
-import { EquityRow, QueueMessage, PrevRow, EQUITY_TABLE  } from "./type.ts";
+import { QUEUE_NAME, EQUITY_TABLE } from "./constant.ts";
+import type { EquityRow, QueueMessage, PrevRow  } from "./type.ts";
 /**
  * Get prev row in priority order:
  *  1. single pending queue message for this ul

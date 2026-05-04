@@ -1,4 +1,4 @@
-import { Exchange } from "./type";
+import { Exchange } from "./type.ts";
 
 const { QUEUE_NAME_OPTION, EXCHANGE, OPTION_TABLE,OPTION_PAYLOAD_TABLE } = Deno.env.toObject();
 

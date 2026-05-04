@@ -1,8 +1,8 @@
 import { QUEUE_MAP } from "./constant.ts";
 
-type QueueName = keyof typeof QUEUE_MAP;
+export type QueueName = keyof typeof QUEUE_MAP;
 
-type WebhookPayload = {
+export type WebhookPayload = {
   table?:  string;
   schema?: string;
   type?:   string;
@@ -13,5 +13,5 @@ type WebhookPayload = {
   [key: string]: unknown;
 };
 
-
-export { QueueName, WebhookPayload };
+export const __keep = true;
+// export type { QueueName, WebhookPayload };

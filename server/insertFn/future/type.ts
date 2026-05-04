@@ -1,4 +1,4 @@
-type FutureRow = {
+export type FutureRow = {
   exchange: string;
   type: string;
   ts: string;
@@ -12,7 +12,7 @@ type FutureRow = {
   ulv: number;
 };
 
-type QueueMessage = {
+export type QueueMessage = {
   msg_id: number;
   message: {
 	ul: string;
@@ -29,16 +29,18 @@ type QueueMessage = {
   };
 };
 
-type PrevRow = {
+export type PrevRow = {
   prev_oi: number;
   prev_ltp: number;
   prev_vol: number;
   prev_ts: string;
 };
 
-type Exchange = {
+export type Exchange = {
     EXCHANGE_1 : number;
     EXCHANGE_2 : number
 };
 
-export { FutureRow, QueueMessage, PrevRow, Exchange}
+// include type file in build file
+export const __keep = true;
+// export type { FutureRow, QueueMessage, PrevRow, Exchange};

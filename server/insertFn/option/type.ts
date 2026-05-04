@@ -1,11 +1,11 @@
-type CePe = {
+export type CePe = {
   oi:  number;
   vol: number;
   iv:  number;
   ltp: number;
 };
 
-type OptionRow = {
+export type OptionRow = {
   exchange: string;
   type:     string;
   ts:       string;
@@ -18,7 +18,7 @@ type OptionRow = {
   pe:       CePe;
 };
 
-type QueueMessage = {
+export type QueueMessage = {
   msg_id: number;
   message: {
     ul:          string;
@@ -54,7 +54,7 @@ type QueueMessage = {
   };
 };
 
-type PrevRow = {
+export type PrevRow = {
   prev_ulv:    number;
   prev_ce_oi:  number;
   prev_ce_vol: number;
@@ -67,9 +67,11 @@ type PrevRow = {
   prev_ts:     string;
 };
 
-type Exchange = {
+export type Exchange = {
     EXCHANGE_1 : number;
     EXCHANGE_2 : number
 };
 
-export { CePe, OptionRow, QueueMessage, PrevRow, Exchange };
+// include type file in build file
+export const __keep = true;
+// export type { CePe, OptionRow, QueueMessage, PrevRow, Exchange };

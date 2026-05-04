@@ -1,4 +1,4 @@
-type EquityRow = {
+export type EquityRow = {
   exchange: string;
   type: string;
   key: string;
@@ -9,7 +9,7 @@ type EquityRow = {
   vol: number;
 };
 
-type QueueMessage = {
+export type QueueMessage = {
   msg_id: number;
   message: {
     ul: string;
@@ -24,10 +24,12 @@ type QueueMessage = {
   };
 };
 
-type PrevRow = {
+export type PrevRow = {
   prev_ltp: number;
   prev_vol: number;
   prev_ts: string;
 };
 
-export { EquityRow, QueueMessage, PrevRow };
+// include type file in build file
+export const __keep = true;
+// export type { EquityRow, QueueMessage, PrevRow };

@@ -2,7 +2,8 @@ import { handleOption } from "../option/index.ts";
 import { handleFuture } from "../future/index.ts";
 import { handleEquity } from "../equity/index.ts";
 
-import { Payload, BrokerType, EquityRow, FutureRow, OptionRow, Result } from "./type.ts";
+import { BrokerType } from "./enum.ts";
+import type { Payload, EquityRow, FutureRow, OptionRow, Result } from "./type.ts";
 
 // --- function overloads for perfect typing ---
 export async function broker(payload: OptionRow[]): Promise<{ type: BrokerType; result: Result }>;
